@@ -1,0 +1,133 @@
+databaseChangeLog:
+  - changeSet:
+      id: init-tariffs
+      author: lobankov
+      changes:
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "Потребилельский"
+              - column:
+                  name: interest_rate
+                  value: "7-9%"
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "Автокредит"
+              - column:
+                  name: interest_rate
+                  value: "4-6%"
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "Ипотечный"
+              - column:
+                  name: interest_rate
+                  value: "3-7%"
+
+  - changeSet:
+      id: init-orders
+      author: lobankov
+      changes:
+        - insert:
+            tableName: loan_order
+            columns:
+              - column:
+                  name: order_id
+                  value: "41966075-f753-41ad-a3cb-4aa26d236c8d"
+              - column:
+                  name: user_id
+                  value: 1
+              - column:
+                  name: tariff_id
+                  value: 2
+              - column:
+                  name: credit_rating
+                  value: 0.81
+              - column:
+                  name: status
+                  value: "REFUSED"
+              - column:
+                  name: time_insert
+                  value: "2022-04-20 07:05:54.094000"
+              - column:
+                  name: time_update
+                  value: "2022-05-20 08:06:00.094000"
+        - insert:
+            tableName: loan_order
+            columns:
+              - column:
+                  name: order_id
+                  value: "5c7c2809-f792-486b-bca1-34b259fa13eb"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: tariff_id
+                  value: 1
+              - column:
+                  name: credit_rating
+                  value: 0.59
+              - column:
+                  name: status
+                  value: "IN_PROGRESS"
+              - column:
+                  name: time_insert
+                  value: "2023-04-21 11:00:00.094000"
+              - column:
+                  name: time_update
+                  value: "2023-04-21 11:00:00.094000"
+        - insert:
+            tableName: loan_order
+            columns:
+              - column:
+                  name: order_id
+                  value: "7bce0119-db79-4163-af89-c25eff4c9aad"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: tariff_id
+                  value: 2
+              - column:
+                  name: credit_rating
+                  value: 0.61
+              - column:
+                  name: status
+                  value: "APPROVED"
+              - column:
+                  name: time_insert
+                  value: "2023-04-08 07:20:00.094000"
+              - column:
+                  name: time_update
+                  value: "2023-04-12 08:30:00.094000"
+        - insert:
+            tableName: loan_order
+            columns:
+              - column:
+                  name: order_id
+                  value: "24a63177-a8b1-4546-a7c6-5279d5b35bf3"
+              - column:
+                  name: user_id
+                  value: 2
+              - column:
+                  name: tariff_id
+                  value: 3
+              - column:
+                  name: credit_rating
+                  value: 0.60
+              - column:
+                  name: status
+                  value: "REFUSED"
+              - column:
+                  name: time_insert
+                  value: "2023-04-15 18:01:20.094000"
+              - column:
+                  name: time_update
+                  value: "2023-04-17 10:15:20.094000"

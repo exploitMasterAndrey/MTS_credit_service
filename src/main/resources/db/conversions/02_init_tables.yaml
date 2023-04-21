@@ -1,0 +1,32 @@
+databaseChangeLog:
+  - changeSet:
+      id: init-tariffs
+      author: lobankov
+      changes:
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "Потребилельский"
+              - column:
+                  name: interest_rate
+                  value: "7-9%"
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "Автокредит"
+              - column:
+                  name: interest_rate
+                  value: "4-6%"
+        - insert:
+            tableName: tariff
+            columns:
+              - column:
+                  name: type
+                  value: "Ипотечный"
+              - column:
+                  name: interest_rate
+                  value: "3-7%"

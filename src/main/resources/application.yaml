@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/credit_service_db
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+
+  liquibase:
+    change-log: db/changelog/changelog.yaml

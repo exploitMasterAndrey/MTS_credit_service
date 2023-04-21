@@ -1,0 +1,77 @@
+databaseChangeLog:
+  - changeSet:
+      id: create
+      author: lobankov
+      changes:
+        - createTable:
+            tableName: tariff
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: type
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: interest_rate
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: loan_order
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: order_id
+                  type: varchar(255)
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: tariff_id
+                  type: BIGINT
+                  constraints:
+                    foreignKeyName: fk_debits_users
+                    references: tariff(id)
+                    nullable: false
+              - column:
+                  name: credit_rating
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: time_insert
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: time_update
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
