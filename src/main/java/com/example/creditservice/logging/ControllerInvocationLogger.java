@@ -23,11 +23,12 @@ public class ControllerInvocationLogger {
     private final ObjectMapper objectMapper;
 
     @Pointcut("within(com.example.creditservice.controller..*)")
-    public void controllerPointCut() {}
+    public void controllerPointCut() {
+    }
 
-    @Before( "controllerPointCut()")
+    @Before("controllerPointCut()")
     @SneakyThrows
-    public void logControllerInvocation(JoinPoint joinPoint){
+    public void logControllerInvocation(JoinPoint joinPoint) {
         String className = joinPoint.getTarget().getClass().getName();
         String methodName = joinPoint.getSignature().getName();
         String methodArgs = Arrays.stream(joinPoint.getArgs()).toList().toString();
@@ -35,5 +36,6 @@ public class ControllerInvocationLogger {
         logger.info("Request: " + objectMapper.writeValueAsString(new LoggerMessage(className, methodName, methodArgs)));
     }
 
-    record LoggerMessage(String className, String methodName, String methodArgs){}
+    record LoggerMessage(String className, String methodName, String methodArgs) {
+    }
 }

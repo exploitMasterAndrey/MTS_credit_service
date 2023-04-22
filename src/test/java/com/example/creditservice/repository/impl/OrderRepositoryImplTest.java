@@ -50,9 +50,9 @@ class OrderRepositoryImplTest {
 
         Assertions.assertAll(() ->
                 Assertions.assertArrayEquals(expected.toArray(), orderRepository.findOrdersByUserIdAndTariffId(1L, 2L).toArray()));
-                Assertions.assertEquals(Collections.emptyList(), orderRepository.findOrdersByUserIdAndTariffId(1L, 4L));
-                Assertions.assertEquals(Collections.emptyList(), orderRepository.findOrdersByUserIdAndTariffId(10L, 1L));
-                Assertions.assertEquals(Collections.emptyList(), orderRepository.findOrdersByUserIdAndTariffId(11L, 11L));
+        Assertions.assertEquals(Collections.emptyList(), orderRepository.findOrdersByUserIdAndTariffId(1L, 4L));
+        Assertions.assertEquals(Collections.emptyList(), orderRepository.findOrdersByUserIdAndTariffId(10L, 1L));
+        Assertions.assertEquals(Collections.emptyList(), orderRepository.findOrdersByUserIdAndTariffId(11L, 11L));
     }
 
     @Test
@@ -67,7 +67,7 @@ class OrderRepositoryImplTest {
     void updateStatusWhereStatusInProgress() {
         Assertions.assertAll(() -> {
             Assertions.assertEquals(1, orderRepository.updateStatusWhereStatusInProgress());
-            Assertions.assertEquals(0 ,orderRepository.updateStatusWhereStatusInProgress());
+            Assertions.assertEquals(0, orderRepository.updateStatusWhereStatusInProgress());
         });
     }
 

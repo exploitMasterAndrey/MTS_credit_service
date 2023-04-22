@@ -11,14 +11,12 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,9 +33,9 @@ public class CreditController {
             summary = "Запрос на получение тарифов",
             responses = {
                     @ApiResponse(responseCode = "200",
-                        content = @Content(
-                            schema = @Schema(implementation = TariffResponse.class),
-                                             mediaType = MediaType.APPLICATION_JSON_VALUE)),
+                            content = @Content(
+                                    schema = @Schema(implementation = TariffResponse.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE)),
                     @ApiResponse(responseCode = "408",
                             content = @Content(
                                     schema = @Schema(implementation = ExceptionHandler.ExceptionResponse.class),
@@ -46,7 +44,7 @@ public class CreditController {
     )
     @HystrixCommand(
             fallbackMethod = "getTariffsFallback",
-            ignoreExceptions = { RuntimeException.class },
+            ignoreExceptions = {RuntimeException.class},
             commandProperties = {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
@@ -77,7 +75,7 @@ public class CreditController {
     )
     @HystrixCommand(
             fallbackMethod = "createOrderFallback",
-            ignoreExceptions = { RuntimeException.class },
+            ignoreExceptions = {RuntimeException.class},
             commandProperties = {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
@@ -108,7 +106,7 @@ public class CreditController {
     )
     @HystrixCommand(
             fallbackMethod = "getOrderStatusFallback",
-            ignoreExceptions = { RuntimeException.class },
+            ignoreExceptions = {RuntimeException.class},
             commandProperties = {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
@@ -136,7 +134,7 @@ public class CreditController {
     )
     @HystrixCommand(
             fallbackMethod = "deleteOrderFallback",
-            ignoreExceptions = { RuntimeException.class },
+            ignoreExceptions = {RuntimeException.class},
             commandProperties = {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
@@ -151,7 +149,7 @@ public class CreditController {
         return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new ExceptionHandler.ExceptionResponse("TIMEOUT", "Что-то пошло не так при получении тарифов. Время запроса превышено"));
     }
 
-    public ResponseEntity<?> createOrderFallback(@RequestBody CreateOrderRequest orderRequest){
+    public ResponseEntity<?> createOrderFallback(@RequestBody CreateOrderRequest orderRequest) {
         return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new ExceptionHandler.ExceptionResponse("TIMEOUT", "Что-то пошло не так при создании заявки. Время запроса превышено"));
     }
 
@@ -162,10 +160,6 @@ public class CreditController {
     public ResponseEntity<?> deleteOrderFallback(@RequestBody DeleteOrderRequest deleteOrderRequest) {
         return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new ExceptionHandler.ExceptionResponse("TIMEOUT", "Что-то пошло не так при удалении заявки. Время запроса превышено"));
     }
-
-//    @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-//    @JsonTypeName("error")
-//    record TimeoutResponse(String code, String message){}
 
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
     @JsonTypeName("data")
