@@ -16,6 +16,6 @@ public class ExceptionHandler {
 
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
     @JsonTypeName("error")
-    record ExceptionResponse(String code, String message) {
+    public record ExceptionResponse(String code, String message) {
     }
 }

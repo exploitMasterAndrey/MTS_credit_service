@@ -96,7 +96,7 @@ class CreditControllerTest {
                         .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionResponse("TARIFF_NOT_FOUND", "Тариф не найден"))));
+                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionHandler.ExceptionResponse("TARIFF_NOT_FOUND", "Тариф не найден"))));
     }
 
     @Test
@@ -115,7 +115,7 @@ class CreditControllerTest {
                         .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionResponse("LOAN_CONSIDERATION", "Заявка в процессе обработки"))));
+                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionHandler.ExceptionResponse("LOAN_CONSIDERATION", "Заявка в процессе обработки"))));
     }
 
     @Test
@@ -134,7 +134,7 @@ class CreditControllerTest {
                         .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionResponse("LOAN_ALREADY_APPROVED", "Заявка уже была одобрена"))));
+                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionHandler.ExceptionResponse("LOAN_ALREADY_APPROVED", "Заявка уже была одобрена"))));
     }
 
     @Test
@@ -153,7 +153,7 @@ class CreditControllerTest {
                         .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionResponse("TRY_LATER", "Попробуйте позже"))));
+                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionHandler.ExceptionResponse("TRY_LATER", "Попробуйте позже"))));
     }
 
     @Test
@@ -177,7 +177,7 @@ class CreditControllerTest {
                         .param("orderId", orderId))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionResponse("ORDER_NOT_FOUND", "Заявка не найдена"))));
+                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionHandler.ExceptionResponse("ORDER_NOT_FOUND", "Заявка не найдена"))));
     }
 
     @Test
@@ -212,7 +212,7 @@ class CreditControllerTest {
                         .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionResponse("ORDER_NOT_FOUND", "Заявка не найдена"))));
+                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionHandler.ExceptionResponse("ORDER_NOT_FOUND", "Заявка не найдена"))));
     }
 
     @Test
@@ -231,11 +231,6 @@ class CreditControllerTest {
                         .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isBadRequest())
-                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionResponse("ORDER_IMPOSSIBLE_TO_DELETE", "Невозможно удалить заявку"))));
-    }
-
-    @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
-    @JsonTypeName("error")
-    record ExceptionResponse(String code, String message) {
+                .andExpect(content().json(objectMapper.writeValueAsString(new ExceptionHandler.ExceptionResponse("ORDER_IMPOSSIBLE_TO_DELETE", "Невозможно удалить заявку"))));
     }
 }

@@ -23,59 +23,67 @@ public class CreditController {
     private final OrderService orderService;
 
     @HystrixCommand(
-            fallbackMethod = "timeoutFallback",
+            fallbackMethod = "getTariffsFallback",
             commandProperties = {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
     )
     @GetMapping("/getTariffs")
-//    @SneakyThrows
     public ResponseEntity<?> getTariffs() {
-//        Thread.sleep(1500);
         List<Tariff> allTariffs = tariffService.getAllTariffs();
         return ResponseEntity.ok(new TariffResponse(allTariffs));
     }
 
-//    @HystrixCommand(
-//            fallbackMethod = "timeoutFallback",
-//            commandProperties = {
-//                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
-//            }
-//    )
+    @HystrixCommand(
+            fallbackMethod = "createOrderFallback",
+            commandProperties = {
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+            }
+    )
     @PostMapping("/order")
-//    @SneakyThrows
     public ResponseEntity<?> createOrder(@RequestBody CreateOrderRequest orderRequest) {
-//        Thread.sleep(1500);
         String orderId = orderService.createOrder(orderRequest.tariffId, orderRequest.userId);
         return ResponseEntity.ok(new CreateOrderResponse(orderId));
     }
 
-//    @HystrixCommand(
-//            fallbackMethod = "timeoutFallback",
-//            commandProperties = {
-//                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
-//            }
-//    )
+    @HystrixCommand(
+            fallbackMethod = "getOrderStatusFallback",
+            commandProperties = {
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+            }
+    )
     @GetMapping("/getStatusOrder")
     public ResponseEntity<?> getOrderStatus(@RequestParam String orderId) {
         Status orderStatus = orderService.getOrderStatus(orderId);
         return ResponseEntity.ok(new GetOrderStatusResponse(orderStatus));
     }
 
-//    @HystrixCommand(
-//            fallbackMethod = "timeoutFallback",
-//            commandProperties = {
-//                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
-//            }
-//    )
+    @HystrixCommand(
+            fallbackMethod = "deleteOrderFallback",
+            commandProperties = {
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
+            }
+    )
     @DeleteMapping("/deleteOrder")
     public ResponseEntity<?> deleteOrder(@RequestBody DeleteOrderRequest deleteOrderRequest) {
         orderService.deleteOrderByUserIdAndOrderId(deleteOrderRequest.userId, deleteOrderRequest.orderId);
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<?> timeoutFallback(){
-        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new TimeoutResponse("TIMEOUT", "Что-то пошло не так. Время запроса превышено"));
+    public ResponseEntity<?> getTariffsFallback() {
+        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new CreditController.TimeoutResponse("TIMEOUT", "Что-то пошло не так при получении тарифов. Время запроса превышено"));
+    }
+
+    public ResponseEntity<?> createOrderFallback(@RequestBody CreateOrderRequest orderRequest){
+        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new CreditController.TimeoutResponse("TIMEOUT", "Что-то пошло не так при создании заявки. Время запроса превышено"));
+    }
+
+    public ResponseEntity<?> getOrderStatusFallback(@RequestParam String orderId) {
+        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new CreditController.TimeoutResponse("TIMEOUT", "Что-то пошло не так при получении статуса заявки. Время запроса превышено"));
+    }
+
+    public ResponseEntity<?> deleteOrderFallback(@RequestBody DeleteOrderRequest deleteOrderRequest) {
+        return ResponseEntity.status(HttpStatus.REQUEST_TIMEOUT).body(new CreditController.TimeoutResponse("TIMEOUT", "Что-то пошло не так при удалении заявки. Время запроса превышено"));
     }
 
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
