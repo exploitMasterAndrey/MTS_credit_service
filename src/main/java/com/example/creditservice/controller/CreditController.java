@@ -24,6 +24,7 @@ public class CreditController {
 
     @HystrixCommand(
             fallbackMethod = "getTariffsFallback",
+            ignoreExceptions = { RuntimeException.class },
             commandProperties = {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
@@ -36,6 +37,7 @@ public class CreditController {
 
     @HystrixCommand(
             fallbackMethod = "createOrderFallback",
+            ignoreExceptions = { RuntimeException.class },
             commandProperties = {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
@@ -48,6 +50,7 @@ public class CreditController {
 
     @HystrixCommand(
             fallbackMethod = "getOrderStatusFallback",
+            ignoreExceptions = { RuntimeException.class },
             commandProperties = {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
@@ -60,6 +63,7 @@ public class CreditController {
 
     @HystrixCommand(
             fallbackMethod = "deleteOrderFallback",
+            ignoreExceptions = { RuntimeException.class },
             commandProperties = {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }

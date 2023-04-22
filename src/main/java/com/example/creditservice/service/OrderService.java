@@ -28,9 +28,9 @@ public class OrderService {
                 case IN_PROGRESS -> throw new LoanConsiderationException("Заявка в процессе обработки");
                 case APPROVED -> throw new LoanAlreadyApprovedException("Заявка уже была одобрена");
                 case REFUSED -> {
-                    LocalDateTime timeUpdate = order.getTimeUpdate().toLocalDateTime();
-                    LocalDateTime now = LocalDateTime.now();
-                    if (now.getMinute() - timeUpdate.getMinute() < 2) throw new TryLaterException("Попробуйте позже");
+                    Timestamp timeUpdate = order.getTimeUpdate();
+                    Timestamp now = Timestamp.valueOf(LocalDateTime.now());
+                    if (now.getTime() - timeUpdate.getTime() < 120000) throw new TryLaterException("Попробуйте позже");
                 }
             }
         });
