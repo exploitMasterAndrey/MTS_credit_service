@@ -1,14 +1,7 @@
 package com.example.creditservice.exception;
 
-public class OrderNotFoundException extends RuntimeException implements ExceptionWrapper {
-    private static final String CODE = "ORDER_NOT_FOUND";
-
+public class OrderNotFoundException extends CreditServiceException {
     public OrderNotFoundException(String message) {
-        super(message);
-    }
-
-    @Override
-    public String getCode() {
-        return CODE;
+        super(message, "ORDER_NOT_FOUND");
     }
 }

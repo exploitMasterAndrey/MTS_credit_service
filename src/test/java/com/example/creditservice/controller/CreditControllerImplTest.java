@@ -1,12 +1,12 @@
 package com.example.creditservice.controller;
 
+import com.example.creditservice.controller.exceptionHandler.ExceptionHandler;
+import com.example.creditservice.controller.impl.CreditControllerImpl;
 import com.example.creditservice.exception.*;
 import com.example.creditservice.model.Status;
 import com.example.creditservice.model.Tariff;
-import com.example.creditservice.service.OrderService;
-import com.example.creditservice.service.TariffService;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.fasterxml.jackson.annotation.JsonTypeName;
+import com.example.creditservice.service.impl.OrderServiceImpl;
+import com.example.creditservice.service.impl.TariffServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
@@ -30,15 +30,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(CreditController.class)
+@WebMvcTest(CreditControllerImpl.class)
 @ExtendWith(MockitoExtension.class)
-class CreditControllerTest {
+class CreditControllerImplTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
-    private TariffService tariffService;
+    private TariffServiceImpl tariffService;
     @MockBean
-    private OrderService orderService;
+    private OrderServiceImpl orderService;
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -58,7 +58,7 @@ class CreditControllerTest {
                 .perform(get("/loan-service/getTariffs"))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(new CreditController.TariffResponse(tariffs))));
+                .andExpect(content().json(objectMapper.writeValueAsString(new CreditControllerImpl.TariffResponse(tariffs))));
     }
 
     @Test
@@ -77,7 +77,7 @@ class CreditControllerTest {
                         .content(requestJson))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(new CreditController.CreateOrderResponse(orderId))));
+                .andExpect(content().json(objectMapper.writeValueAsString(new CreditControllerImpl.CreateOrderResponse(orderId))));
     }
 
     @Test
@@ -165,7 +165,7 @@ class CreditControllerTest {
                         .param("orderId", orderId))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(new CreditController.GetOrderStatusResponse(Status.APPROVED))));
+                .andExpect(content().json(objectMapper.writeValueAsString(new CreditControllerImpl.GetOrderStatusResponse(Status.APPROVED))));
     }
 
     @Test

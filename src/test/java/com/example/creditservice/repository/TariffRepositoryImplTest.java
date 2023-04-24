@@ -1,7 +1,6 @@
-package com.example.creditservice.repository.impl;
+package com.example.creditservice.repository;
 
 import com.example.creditservice.model.Tariff;
-import com.example.creditservice.repository.TariffRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

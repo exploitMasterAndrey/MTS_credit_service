@@ -6,6 +6,7 @@ import com.example.creditservice.model.Status;
 import com.example.creditservice.model.Tariff;
 import com.example.creditservice.repository.OrderRepository;
 import com.example.creditservice.repository.TariffRepository;
+import com.example.creditservice.service.impl.OrderServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,7 @@ import java.util.UUID;
 import static org.mockito.ArgumentMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
-class OrderServiceTest {
+class OrderServiceImplTest {
     @Mock
     private OrderRepository orderRepository;
     @Mock
@@ -33,7 +34,7 @@ class OrderServiceTest {
     @Test
     void createOrderThrowsTariffNotFoundException() {
         Mockito.when(tariffRepository.findTariffById(anyLong())).thenReturn(Optional.empty());
-        orderService = new OrderService(orderRepository, tariffRepository);
+        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(TariffNotFoundException.class, () -> orderService.createOrder(1L, 1L));
     }
 
@@ -58,7 +59,7 @@ class OrderServiceTest {
                         Timestamp.valueOf(LocalDateTime.now())
                 )
         ));
-        orderService = new OrderService(orderRepository, tariffRepository);
+        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(LoanConsiderationException.class, () -> orderService.createOrder(1L, 1L));
     }
 
@@ -83,7 +84,7 @@ class OrderServiceTest {
                         Timestamp.valueOf(LocalDateTime.now())
                 )
         ));
-        orderService = new OrderService(orderRepository, tariffRepository);
+        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(LoanAlreadyApprovedException.class, () -> orderService.createOrder(1L, 1L));
     }
 
@@ -108,7 +109,7 @@ class OrderServiceTest {
                         Timestamp.valueOf(LocalDateTime.now().minusMinutes(1))
                 )
         ));
-        orderService = new OrderService(orderRepository, tariffRepository);
+        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(TryLaterException.class, () -> orderService.createOrder(1L, 1L));
     }
 
@@ -133,7 +134,7 @@ class OrderServiceTest {
                         Timestamp.valueOf(LocalDateTime.now().minusMinutes(4))
                 )
         ));
-        orderService = new OrderService(orderRepository, tariffRepository);
+        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         orderService.createOrder(1L, 1L);
         Mockito.verify(orderRepository, Mockito.times(1)).save(any(Order.class));
     }
@@ -141,21 +142,21 @@ class OrderServiceTest {
     @Test
     void getOrderStatusThrowsOrderNotFoundException() {
         Mockito.when(orderRepository.findOrderStatusByOrderId(anyString())).thenReturn(Optional.empty());
-        orderService = new OrderService(orderRepository, tariffRepository);
+        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(OrderNotFoundException.class, () -> orderService.getOrderStatus(anyString()));
     }
 
     @Test
     void getOrderStatusReturnsStatus() {
         Mockito.when(orderRepository.findOrderStatusByOrderId(anyString())).thenReturn(Optional.of(Status.IN_PROGRESS));
-        orderService = new OrderService(orderRepository, tariffRepository);
+        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertEquals(Status.IN_PROGRESS, orderService.getOrderStatus(anyString()));
     }
 
     @Test
     void deleteOrderByUserIdAndOrderIdThrowsOrderNotFoundException() {
         Mockito.when(orderRepository.findOrderByUserIdAndOrderId(anyLong(), anyString())).thenReturn(Optional.empty());
-        orderService = new OrderService(orderRepository, tariffRepository);
+        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(OrderNotFoundException.class, () -> orderService.deleteOrderByUserIdAndOrderId(anyLong(), anyString()));
     }
 
@@ -184,7 +185,7 @@ class OrderServiceTest {
                 Timestamp.valueOf(LocalDateTime.now().minusMinutes(2)),
                 Timestamp.valueOf(LocalDateTime.now().minusMinutes(1))
         )));
-        orderService = new OrderService(orderRepository, tariffRepository);
+        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertAll(() -> {
             Assertions.assertThrows(OrderImpossibleToDeleteException.class, () -> orderService.deleteOrderByUserIdAndOrderId(1L, fst));
             Assertions.assertThrows(OrderImpossibleToDeleteException.class, () -> orderService.deleteOrderByUserIdAndOrderId(2L, snd));

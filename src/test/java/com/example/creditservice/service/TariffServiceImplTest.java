@@ -2,6 +2,7 @@ package com.example.creditservice.service;
 
 import com.example.creditservice.model.Tariff;
 import com.example.creditservice.repository.TariffRepository;
+import com.example.creditservice.service.impl.TariffServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-class TariffServiceTest {
+class TariffServiceImplTest {
     @Mock
     private TariffRepository tariffRepository;
     private TariffService tariffService;
@@ -25,7 +26,7 @@ class TariffServiceTest {
                 new Tariff(3L, "Ипотечный", "3-7%")
         );
         Mockito.when(tariffRepository.findAll()).thenReturn(tariffs);
-        tariffService = new TariffService(tariffRepository);
+        tariffService = new TariffServiceImpl(tariffRepository);
         Assertions.assertArrayEquals(tariffs.toArray(), tariffService.getAllTariffs().toArray(new Tariff[0]));
     }
 }

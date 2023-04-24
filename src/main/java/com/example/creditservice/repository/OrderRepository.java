@@ -20,15 +20,15 @@ public interface OrderRepository {
     );
     RowMapper<Status> status = (rs, rowNum) -> Status.valueOf(rs.getString(1));
 
-    Integer save(Order order);
+    int save(Order order);
 
     List<Order> findOrdersByUserIdAndTariffId(Long userId, Long tariffId);
 
     Optional<Status> findOrderStatusByOrderId(String orderId);
 
-    Integer updateStatusWhereStatusInProgress();
+    int updateStatusWhereStatusInProgress();
 
     Optional<Order> findOrderByUserIdAndOrderId(Long userId, String orderId);
 
-    Integer deleteOrderByOrderId(String orderId);
+    int deleteOrderByOrderId(String orderId);
 }
