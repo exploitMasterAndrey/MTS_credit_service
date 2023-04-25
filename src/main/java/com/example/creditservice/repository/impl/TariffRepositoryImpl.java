@@ -16,23 +16,20 @@ public class TariffRepositoryImpl implements TariffRepository {
     private final JdbcTemplate jdbcTemplate;
     private static String GET_ALL = "SELECT * FROM tariff";
     private static String GET_TARIFF_BY_ID = "SELECT * from tariff WHERE id = ?";
+    private static String INSERT_TARIFF = "INSERT INTO tariff(type, interest_rate) VALUES(?, ?)";
 
     @Override
     public List<Tariff> findAll() {
-        return jdbcTemplate.query(
-                GET_ALL,
-                TariffRepository.tariff
-        );
+        return jdbcTemplate.query(GET_ALL, TariffRepository.tariff);
     }
 
     @Override
     public Optional<Tariff> findTariffById(Long id) {
-        return jdbcTemplate.query(con -> {
-                    PreparedStatement ps = con.prepareStatement(GET_TARIFF_BY_ID);
-                    ps.setLong(1, id);
-                    return ps;
-                },
-                TariffRepository.tariff
-        ).stream().findFirst();
+        return jdbcTemplate.query(GET_TARIFF_BY_ID, TariffRepository.tariff, id).stream().findFirst();
+    }
+
+    @Override
+    public int createTariff(String type, String interest_rate) {
+        return jdbcTemplate.update(INSERT_TARIFF, type, interest_rate);
     }
 }

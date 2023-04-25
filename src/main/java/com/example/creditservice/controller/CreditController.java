@@ -1,7 +1,6 @@
 package com.example.creditservice.controller;
 
 import com.example.creditservice.controller.exceptionHandler.ExceptionHandler;
-import com.example.creditservice.controller.impl.CreditControllerImpl;
 import com.example.creditservice.model.Status;
 import com.example.creditservice.model.Tariff;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -30,7 +29,7 @@ public interface CreditController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE))
             }
     )
-    ResponseEntity<?> getTariffs();
+    ResponseEntity<TariffResponse> getTariffs();
     @Operation(
             tags = "Подать заявку",
             summary = "Запрос на подачу заявки",
@@ -50,7 +49,7 @@ public interface CreditController {
             }
     )
 
-    ResponseEntity<?> createOrder(CreditControllerImpl.CreateOrderRequest orderRequest);
+    ResponseEntity<CreateOrderResponse> createOrder(CreateOrderRequest orderRequest);
     @Operation(
             tags = "Получить статус заявки",
             summary = "Запрос на получение статуса заявки",
@@ -70,7 +69,7 @@ public interface CreditController {
             }
     )
 
-    ResponseEntity<?> getOrderStatus(String orderId);
+    ResponseEntity<GetOrderStatusResponse> getOrderStatus(String orderId);
 
     @Operation(
             tags = "Удалить заявку",
@@ -87,7 +86,21 @@ public interface CreditController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE))
             }
     )
-    ResponseEntity<?> deleteOrder(CreditControllerImpl.DeleteOrderRequest deleteOrderRequest);
+    ResponseEntity<?> deleteOrder(DeleteOrderRequest deleteOrderRequest);
+
+    @Operation(
+            tags = "Добавить тариф",
+            summary = "Добавление заявки (авторизация с ролью админ)",
+            responses = {
+                    @ApiResponse(responseCode = "201"),
+                    @ApiResponse(responseCode = "401"),
+                    @ApiResponse(responseCode = "408",
+                            content = @Content(
+                                    schema = @Schema(implementation = ExceptionHandler.ExceptionResponse.class),
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE))
+            }
+    )
+    ResponseEntity<?> createTariff(CreateTariffRequest createTariffRequest);
 
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
     @JsonTypeName("data")
@@ -98,6 +111,9 @@ public interface CreditController {
     }
 
     record DeleteOrderRequest(Long userId, String orderId) {
+    }
+
+    record CreateTariffRequest(String type, String interest_rate){
     }
 
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)

@@ -17,4 +17,5 @@ public interface TariffRepository {
 
     Optional<Tariff> findTariffById(Long id);
 
+    int createTariff(String type, String interest_rate);
 }

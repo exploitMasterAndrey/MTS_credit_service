@@ -1,4 +1,4 @@
-package com.example.creditservice.config;
+package com.example.creditservice.config.log;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

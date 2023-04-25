@@ -9,6 +9,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyString;
+
 @Testcontainers
 @SpringBootTest
 class TariffRepositoryImplTest {
@@ -30,5 +32,10 @@ class TariffRepositoryImplTest {
             Assertions.assertEquals(expected, tariffRepository.findTariffById(1L).get());
             Assertions.assertTrue(tariffRepository.findTariffById(10L).isEmpty());
         });
+    }
+
+    @Test
+    void createTariff(){
+        Assertions.assertEquals(1, tariffRepository.createTariff(anyString(), anyString()));
     }
 }

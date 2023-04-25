@@ -30,3 +30,23 @@ databaseChangeLog:
               - column:
                   name: interest_rate
                   value: "3-7%"
+
+        - insert:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  value: "andrey"
+              - column:
+                  name: password
+                  value: "$2a$12$B.dQEjIB.3.9QpRbWz/TWeMAq6.YZCy9gwnyK984q3gpUN7kXq3X."
+
+        - insert:
+            tableName: authorities
+            columns:
+              - column:
+                  name: username
+                  value: "andrey"
+              - column:
+                  name: authority
+                  value: "ADMIN"

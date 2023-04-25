@@ -75,3 +75,55 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     nullable: false
+
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  type: varchar(50)
+                  constraints:
+                    primaryKey: true
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: enabled
+                  type: TINYINT
+                  constraints:
+                    nullable: false
+
+        - addDefaultValue:
+            tableName: users
+            columnName: enabled
+            defaultValue:  1
+
+        - createTable:
+            tableName: authorities
+            columns:
+              - column:
+                  name: username
+                  type: varchar(50)
+                  constraints:
+                    foreignKeyName: fk_authorities_users
+                    references: users(username)
+                    nullable: false
+              - column:
+                  name: authority
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+
+        - createIndex:
+            columns:
+              - column:
+                  name: username
+              - column:
+                  name: authority
+            indexName: ix_auth_username
+            tableName: authorities
+            unique: true

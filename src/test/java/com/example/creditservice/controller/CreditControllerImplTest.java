@@ -1,5 +1,6 @@
 package com.example.creditservice.controller;
 
+import com.example.creditservice.config.auth.JWTAuthFilter;
 import com.example.creditservice.controller.exceptionHandler.ExceptionHandler;
 import com.example.creditservice.controller.impl.CreditControllerImpl;
 import com.example.creditservice.exception.*;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -32,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(CreditControllerImpl.class)
 @ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc(addFilters = false)
 class CreditControllerImplTest {
     @Autowired
     private MockMvc mockMvc;
@@ -39,6 +42,9 @@ class CreditControllerImplTest {
     private TariffServiceImpl tariffService;
     @MockBean
     private OrderServiceImpl orderService;
+    @MockBean
+    private JWTAuthFilter jwtAuthFilter;
+
     @Autowired
     private ObjectMapper objectMapper;
 

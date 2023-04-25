@@ -7,3 +7,8 @@ spring:
 
   liquibase:
     change-log: db/changelog/changelog.yaml
+
+jwt:
+  secret_key: "secret"
+  expires_in: 1000
+  issuer: "creditService"

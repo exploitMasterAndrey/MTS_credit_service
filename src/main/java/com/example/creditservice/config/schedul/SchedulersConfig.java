@@ -1,4 +1,4 @@
-package com.example.creditservice.config;
+package com.example.creditservice.config.schedul;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
