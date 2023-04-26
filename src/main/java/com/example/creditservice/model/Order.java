@@ -2,11 +2,13 @@ package com.example.creditservice.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class Order {
     private Long id;
     private String orderId;
@@ -16,5 +18,5 @@ public class Order {
     private Status status;
     private Timestamp timeInsert;
     private Timestamp timeUpdate;
-
+    private Integer sentToStream;
 }

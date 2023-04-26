@@ -16,7 +16,8 @@ public interface OrderRepository {
             rs.getDouble(5),
             Status.valueOf(rs.getString(6)),
             rs.getTimestamp(7),
-            rs.getTimestamp(8)
+            rs.getTimestamp(8),
+            rs.getInt(9)
     );
     RowMapper<Status> status = (rs, rowNum) -> Status.valueOf(rs.getString(1));
 
@@ -26,9 +27,15 @@ public interface OrderRepository {
 
     Optional<Status> findOrderStatusByOrderId(String orderId);
 
-    int updateStatusWhereStatusInProgress();
+    List<Order> findOrdersWhereStatus(Status status);
+
+    List<Order> findOrdersToSend();
+
+    int[] updateOrderStatus(List<Order> orders);
 
     Optional<Order> findOrderByUserIdAndOrderId(Long userId, String orderId);
 
     int deleteOrderByOrderId(String orderId);
+
+    int updateOrderSending(Long id);
 }

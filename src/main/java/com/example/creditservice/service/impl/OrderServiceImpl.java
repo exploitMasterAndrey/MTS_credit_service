@@ -9,7 +9,8 @@ import com.example.creditservice.service.OrderService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -21,6 +22,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
+    @Value("${topic-name}")
+    private String topicName;
+    private final KafkaTemplate<String, Order> kafkaTemplate;
     private final OrderRepository orderRepository;
     private final TariffRepository tariffRepository;
 
@@ -29,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
     )
+    @Override
     public String createOrder(Long tariffId, Long userId) {
         if (tariffRepository.findTariffById(tariffId).isEmpty()) throw new TariffNotFoundException("Тариф не найден");
         List<Order> ordersByUserId = orderRepository.findOrdersByUserIdAndTariffId(userId, tariffId);
@@ -52,7 +57,8 @@ public class OrderServiceImpl implements OrderService {
                 Math.floor((Math.random() * 81 + 10)) / 100.0,
                 Status.IN_PROGRESS,
                 Timestamp.valueOf(LocalDateTime.now()),
-                Timestamp.valueOf(LocalDateTime.now())
+                Timestamp.valueOf(LocalDateTime.now()),
+                0
         );
         orderRepository.save(order);
         return orderId;
@@ -63,6 +69,7 @@ public class OrderServiceImpl implements OrderService {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
     )
+    @Override
     public Status getOrderStatus(String orderId) {
         return orderRepository.findOrderStatusByOrderId(orderId).orElseThrow(() -> new OrderNotFoundException("Заявка не найдена"));
     }
@@ -72,6 +79,7 @@ public class OrderServiceImpl implements OrderService {
                     @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000")
             }
     )
+    @Override
     public void deleteOrderByUserIdAndOrderId(Long userId, String orderId) {
         Optional<Order> orderByUserIdAndOrderIdOpt = orderRepository.findOrderByUserIdAndOrderId(userId, orderId);
         Order order = orderByUserIdAndOrderIdOpt.orElseThrow(() -> new OrderNotFoundException("Заявка не найдена"));
@@ -80,7 +88,15 @@ public class OrderServiceImpl implements OrderService {
         } else throw new OrderImpossibleToDeleteException("Невозможно удалить заявку");
     }
 
+    @Override
     public void makeADecisionOnOrder() {
-        orderRepository.updateStatusWhereStatusInProgress();
+        List<Order> ordersWhereStatus = orderRepository.findOrdersWhereStatus(Status.IN_PROGRESS);
+        if (ordersWhereStatus.isEmpty()) return;
+        orderRepository.updateOrderStatus(ordersWhereStatus);
+        List<Order> ordersToSend = orderRepository.findOrdersToSend();
+        ordersToSend.forEach(order -> {
+            kafkaTemplate.send(topicName, order);
+            orderRepository.updateOrderSending(order.getId());
+        });
     }
 }

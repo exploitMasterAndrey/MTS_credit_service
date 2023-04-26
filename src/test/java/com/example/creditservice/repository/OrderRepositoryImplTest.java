@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.Timestamp;
@@ -16,6 +18,8 @@ import java.util.List;
 @Testcontainers
 @SpringBootTest
 class OrderRepositoryImplTest {
+    @MockBean
+    private KafkaTemplate<String, Order> kafkaTemplate;
     @Autowired
     private OrderRepository orderRepository;
 
@@ -29,7 +33,8 @@ class OrderRepositoryImplTest {
                 0.80,
                 Status.IN_PROGRESS,
                 Timestamp.valueOf(LocalDateTime.now()),
-                Timestamp.valueOf(LocalDateTime.now())
+                Timestamp.valueOf(LocalDateTime.now()),
+                0
         ));
         Assertions.assertEquals(1, inserted);
     }
@@ -44,7 +49,8 @@ class OrderRepositoryImplTest {
                 0.81,
                 Status.REFUSED,
                 Timestamp.valueOf("2022-04-20 07:05:54.094000"),
-                Timestamp.valueOf("2022-05-20 08:06:00.094000")
+                Timestamp.valueOf("2022-05-20 08:06:00.094000"),
+                0
         ));
 
         Assertions.assertAll(() ->
@@ -63,11 +69,21 @@ class OrderRepositoryImplTest {
     }
 
     @Test
-    void updateStatusWhereStatusInProgress() {
-        Assertions.assertAll(() -> {
-            Assertions.assertEquals(1, orderRepository.updateStatusWhereStatusInProgress());
-            Assertions.assertEquals(0, orderRepository.updateStatusWhereStatusInProgress());
-        });
+    void findOrdersWhereStatus(){
+        List<Order> expected = List.of(
+                new Order(
+                        2L,
+                        "5c7c2809-f792-486b-bca1-34b259fa13eb",
+                        2L,
+                        1L,
+                        0.59,
+                        Status.IN_PROGRESS,
+                        Timestamp.valueOf("2023-04-21 11:00:00.094000"),
+                        Timestamp.valueOf("2023-04-21 11:00:00.094000"),
+                        0
+                )
+        );
+        Assertions.assertArrayEquals(expected.toArray(), orderRepository.findOrdersWhereStatus(Status.IN_PROGRESS).toArray());
     }
 
     @Test
@@ -80,7 +96,8 @@ class OrderRepositoryImplTest {
                 0.61,
                 Status.APPROVED,
                 Timestamp.valueOf("2023-04-08 07:20:00.094000"),
-                Timestamp.valueOf("2023-04-12 08:30:00.094000")
+                Timestamp.valueOf("2023-04-12 08:30:00.094000"),
+                0
         );
 
         Assertions.assertAll(() -> {
@@ -89,6 +106,48 @@ class OrderRepositoryImplTest {
             Assertions.assertTrue(orderRepository.findOrderByUserIdAndOrderId(2L, "7bce2119-db89-4163-af90-c25eff4c9aad").isEmpty());
             Assertions.assertTrue(orderRepository.findOrderByUserIdAndOrderId(10L, "7bce0889-db79-4263-af89-c25eff4c9aad").isEmpty());
         });
+    }
+
+    @Test
+    void findOrdersToSend(){
+        List<Order> expected = List.of(
+                new Order(
+                        4L,
+                        "24a63177-a8b1-4546-a7c6-5279d5b35bf3",
+                        2L,
+                        3L,
+                        0.60,
+                        Status.REFUSED,
+                        Timestamp.valueOf("2023-04-15 18:01:20.094000"),
+                        Timestamp.valueOf("2023-04-17 10:15:20.094000"),
+                        0
+                )
+        );
+        Assertions.assertArrayEquals(expected.toArray(), orderRepository.findOrdersToSend().toArray());
+    }
+
+    @Test
+    void updateOrderStatus(){
+        List<Order> expected = List.of(
+                new Order(
+                        4L,
+                        "24a63177-a8b1-4546-a7c6-5279d5b35bf3",
+                        2L,
+                        3L,
+                        0.60,
+                        Status.REFUSED,
+                        Timestamp.valueOf("2023-04-15 18:01:20.094000"),
+                        Timestamp.valueOf("2023-04-17 10:15:20.094000"),
+                        0
+                )
+        );
+        orderRepository.updateOrderStatus(expected);
+        Assertions.assertEquals(1, orderRepository.updateOrderStatus(expected).length);
+    }
+
+    @Test
+    void updateOrderSending(){
+        Assertions.assertEquals(1, orderRepository.updateOrderSending(4L));
     }
 
     @Test

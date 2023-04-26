@@ -10,6 +10,7 @@ import com.example.creditservice.service.impl.OrderServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -29,12 +30,12 @@ class OrderServiceImplTest {
     @Mock
     private TariffRepository tariffRepository;
 
-    private OrderService orderService;
+    @InjectMocks
+    private OrderServiceImpl orderService;
 
     @Test
     void createOrderThrowsTariffNotFoundException() {
         Mockito.when(tariffRepository.findTariffById(anyLong())).thenReturn(Optional.empty());
-        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(TariffNotFoundException.class, () -> orderService.createOrder(1L, 1L));
     }
 
@@ -56,10 +57,10 @@ class OrderServiceImplTest {
                         0.65,
                         Status.IN_PROGRESS,
                         Timestamp.valueOf(LocalDateTime.now()),
-                        Timestamp.valueOf(LocalDateTime.now())
+                        Timestamp.valueOf(LocalDateTime.now()),
+                        0
                 )
         ));
-        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(LoanConsiderationException.class, () -> orderService.createOrder(1L, 1L));
     }
 
@@ -81,10 +82,10 @@ class OrderServiceImplTest {
                         0.65,
                         Status.APPROVED,
                         Timestamp.valueOf(LocalDateTime.now()),
-                        Timestamp.valueOf(LocalDateTime.now())
+                        Timestamp.valueOf(LocalDateTime.now()),
+                        0
                 )
         ));
-        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(LoanAlreadyApprovedException.class, () -> orderService.createOrder(1L, 1L));
     }
 
@@ -106,10 +107,10 @@ class OrderServiceImplTest {
                         0.65,
                         Status.REFUSED,
                         Timestamp.valueOf(LocalDateTime.now().minusMinutes(2)),
-                        Timestamp.valueOf(LocalDateTime.now().minusMinutes(1))
+                        Timestamp.valueOf(LocalDateTime.now().minusMinutes(1)),
+                        0
                 )
         ));
-        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(TryLaterException.class, () -> orderService.createOrder(1L, 1L));
     }
 
@@ -131,10 +132,10 @@ class OrderServiceImplTest {
                         0.65,
                         Status.REFUSED,
                         Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)),
-                        Timestamp.valueOf(LocalDateTime.now().minusMinutes(4))
+                        Timestamp.valueOf(LocalDateTime.now().minusMinutes(4)),
+                        0
                 )
         ));
-        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         orderService.createOrder(1L, 1L);
         Mockito.verify(orderRepository, Mockito.times(1)).save(any(Order.class));
     }
@@ -142,21 +143,18 @@ class OrderServiceImplTest {
     @Test
     void getOrderStatusThrowsOrderNotFoundException() {
         Mockito.when(orderRepository.findOrderStatusByOrderId(anyString())).thenReturn(Optional.empty());
-        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(OrderNotFoundException.class, () -> orderService.getOrderStatus(anyString()));
     }
 
     @Test
     void getOrderStatusReturnsStatus() {
         Mockito.when(orderRepository.findOrderStatusByOrderId(anyString())).thenReturn(Optional.of(Status.IN_PROGRESS));
-        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertEquals(Status.IN_PROGRESS, orderService.getOrderStatus(anyString()));
     }
 
     @Test
     void deleteOrderByUserIdAndOrderIdThrowsOrderNotFoundException() {
         Mockito.when(orderRepository.findOrderByUserIdAndOrderId(anyLong(), anyString())).thenReturn(Optional.empty());
-        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertThrows(OrderNotFoundException.class, () -> orderService.deleteOrderByUserIdAndOrderId(anyLong(), anyString()));
     }
 
@@ -173,7 +171,8 @@ class OrderServiceImplTest {
                 0.65,
                 Status.REFUSED,
                 Timestamp.valueOf(LocalDateTime.now().minusMinutes(5)),
-                Timestamp.valueOf(LocalDateTime.now().minusMinutes(4))
+                Timestamp.valueOf(LocalDateTime.now().minusMinutes(4)),
+                0
         )));
         Mockito.when(orderRepository.findOrderByUserIdAndOrderId(2L, snd)).thenReturn(Optional.of(new Order(
                 2L,
@@ -183,9 +182,9 @@ class OrderServiceImplTest {
                 0.65,
                 Status.APPROVED,
                 Timestamp.valueOf(LocalDateTime.now().minusMinutes(2)),
-                Timestamp.valueOf(LocalDateTime.now().minusMinutes(1))
+                Timestamp.valueOf(LocalDateTime.now().minusMinutes(1)),
+                0
         )));
-        orderService = new OrderServiceImpl(orderRepository, tariffRepository);
         Assertions.assertAll(() -> {
             Assertions.assertThrows(OrderImpossibleToDeleteException.class, () -> orderService.deleteOrderByUserIdAndOrderId(1L, fst));
             Assertions.assertThrows(OrderImpossibleToDeleteException.class, () -> orderService.deleteOrderByUserIdAndOrderId(2L, snd));

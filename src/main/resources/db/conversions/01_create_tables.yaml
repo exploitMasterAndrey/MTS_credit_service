@@ -75,6 +75,11 @@ databaseChangeLog:
                   type: TIMESTAMP
                   constraints:
                     nullable: false
+              - column:
+                  name: sent_to_stream
+                  type: TINYINT
+                  constraints:
+                    nullable: false
 
         - createTable:
             tableName: users

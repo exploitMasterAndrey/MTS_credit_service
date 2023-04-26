@@ -20,27 +20,35 @@
         <testcontainers.junit-jupiter-version>1.18.0</testcontainers.junit-jupiter-version>
         <spring-cloud-starter-netflix-hystrix-version>2.2.10.RELEASE</spring-cloud-starter-netflix-hystrix-version>
         <springdoc-openapi-starter-webmvc-ui>2.0.4</springdoc-openapi-starter-webmvc-ui>
+        <jaxb-runtime-version>4.0.2</jaxb-runtime-version>
+        <jaxb-api-version>2.4.0-b180830.0359</jaxb-api-version>
+        <jjwt-version>0.9.1</jjwt-version>
     </properties>
     <dependencies>
         <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>4.0.2</version>
+            <version>${jaxb-runtime-version}</version>
         </dependency>
-
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
-            <version>2.4.0-b180830.0359</version>
+            <version>${jaxb-api-version}</version>
         </dependency>
-
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
-            <version>0.9.1</version>
+            <version>${jjwt-version}</version>
         </dependency>
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>

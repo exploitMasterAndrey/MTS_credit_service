@@ -4,6 +4,20 @@ spring:
     driverClassName: org.postgresql.Driver
     username: postgres
     password: postgres
+  kafka:
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      bootstrap-servers: localhost:9092
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      bootstrap-servers: localhost:9092
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "*"
 
   liquibase:
     change-log: db/changelog/changelog.yaml
@@ -12,3 +26,5 @@ jwt:
   secret_key: "secret"
   expires_in: 1000
   issuer: "creditService"
+
+topic-name: "statisticsTopic"
