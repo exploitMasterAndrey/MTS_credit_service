@@ -5,6 +5,7 @@
 
     - Java
     - Spring
+    - Kafka
     - Liquibase
     - JdbcTemplate
     - Testcontainers
@@ -33,12 +34,28 @@ API:
                 "userId":{userId},
                 "orderId":"{orderId}"
               }
+    
+    Метод входа в систему (username = andrey, password = andrey)
+        POST /loan-service/login
+        body: {
+                "username":{username},
+                "password":"{password}"
+              }
+
+    Метод добавления тарифов (access_token приходит в ответе на запрос login)
+        POST /loan-service/tairff
+        headers: {
+                   "Authorization": {access_token}
+                 }
+        body: {
+               "type":{type}
+               "interest_rate":{interest_rate}
+              }
 
 Для запуска проекта:
 
-    1. Создать базу данных
-    2. Установить url базы в application.properties
-        spring:
-            datasource:
-                url: {url}
-    
+    1. Установить Docker с оффициального сайта https://www.docker.com/
+    2. Выбрать папку, где будет храниться проект
+    3. В выбранной папке прописать команду "git clone https://github.com/exploitMasterAndrey/MTS_credit_service.git"
+    4. В скаченном проекте найти файл "mvnw" и в нем поменять Line Separator с "CRLF" на "LF"
+    5. В терминале прописать команду docker-compose up
