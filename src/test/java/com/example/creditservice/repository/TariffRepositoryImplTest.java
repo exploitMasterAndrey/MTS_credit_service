@@ -5,7 +5,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.KafkaContainer;
+import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 
@@ -14,6 +19,16 @@ import static org.mockito.ArgumentMatchers.anyString;
 @Testcontainers
 @SpringBootTest
 class TariffRepositoryImplTest {
+    @Container
+    private static KafkaContainer kafkaContainer = new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka"));
+
+    @DynamicPropertySource
+    static void dataSourceProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.kafka.bootstrap-servers", kafkaContainer::getBootstrapServers);
+        registry.add("spring.kafka.consumer.bootstrap-servers", kafkaContainer::getBootstrapServers);
+        registry.add("spring.kafka.producer.bootstrap-servers", kafkaContainer::getBootstrapServers);
+    }
+
     @Autowired
     private TariffRepository tariffRepository;
 
@@ -35,7 +50,7 @@ class TariffRepositoryImplTest {
     }
 
     @Test
-    void createTariff(){
+    void createTariff() {
         Assertions.assertEquals(1, tariffRepository.createTariff(anyString(), anyString()));
     }
 }

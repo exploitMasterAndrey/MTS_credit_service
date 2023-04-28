@@ -115,7 +115,7 @@ databaseChangeLog:
                   value: "2023-04-12 08:30:00.094000"
               - column:
                   name: sent_to_stream
-                  value: 1
+                  value: 0
         - insert:
             tableName: loan_order
             columns:
@@ -142,4 +142,4 @@ databaseChangeLog:
                   value: "2023-04-17 10:15:20.094000"
               - column:
                   name: sent_to_stream
-                  value: 0
+                  value: 1
