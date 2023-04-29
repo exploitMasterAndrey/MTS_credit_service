@@ -52,10 +52,12 @@ API:
                "interest_rate":{interest_rate}
               }
 
+    URL документации swagger: /swagger-ui/index.html#/
+
 Для запуска проекта:
 
     1. Установить Docker с оффициального сайта https://www.docker.com/
     2. Выбрать папку, где будет храниться проект
     3. В выбранной папке прописать команду "git clone https://github.com/exploitMasterAndrey/MTS_credit_service.git"
     4. В скаченном проекте найти файл "mvnw" и в нем поменять Line Separator с "CRLF" на "LF"
-    5. В терминале прописать команду docker-compose up
+    5. В терминале (в корневой папке проекта) прописать команду docker-compose up
