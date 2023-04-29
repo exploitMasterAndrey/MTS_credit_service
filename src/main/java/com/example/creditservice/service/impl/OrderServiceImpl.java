@@ -11,6 +11,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -18,6 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -95,8 +97,8 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.updateOrderStatus(ordersWhereStatus);
         List<Order> ordersToSend = orderRepository.findOrdersToSend();
         ordersToSend.forEach(order -> {
-            kafkaTemplate.send(topicName, order);
-            orderRepository.updateOrderSending(order.getId());
+            CompletableFuture<SendResult<String, Order>> send = kafkaTemplate.send(topicName, order);
+            if (send.isDone()) orderRepository.updateOrderSending(order.getId());
         });
     }
 }
