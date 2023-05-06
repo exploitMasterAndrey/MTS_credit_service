@@ -59,5 +59,6 @@ API:
     1. Установить Docker с оффициального сайта https://www.docker.com/
     2. Выбрать папку, где будет храниться проект
     3. В выбранной папке прописать команду "git clone https://github.com/exploitMasterAndrey/MTS_credit_service.git"
-    4. В скаченном проекте найти файл "mvnw" и в нем поменять Line Separator с "CRLF" на "LF"
+    4. При запуске на ОС Windows в скаченном проекте найти файл "mvnw" и в нем поменять Line Separator с "CRLF" на "LF"
+       При запуске на ОС MacOS в терминале (в корневой папке проекта) прописать "chmod +x ./mvnw" 
     5. В терминале (в корневой папке проекта) прописать команду docker-compose up

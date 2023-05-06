@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
@@ -90,7 +91,7 @@ public interface CreditController {
 
     @Operation(
             tags = "Добавить тариф",
-            summary = "Добавление заявки (авторизация с ролью админ)",
+            summary = "Добавление тарифа (авторизация с ролью админ)",
             responses = {
                     @ApiResponse(responseCode = "201"),
                     @ApiResponse(responseCode = "401"),
@@ -100,6 +101,7 @@ public interface CreditController {
                                     mediaType = MediaType.APPLICATION_JSON_VALUE))
             }
     )
+    @SecurityRequirement(name = "Bearer Authentication")
     ResponseEntity<?> createTariff(CreateTariffRequest createTariffRequest);
 
     @JsonTypeInfo(include = JsonTypeInfo.As.WRAPPER_OBJECT, use = JsonTypeInfo.Id.NAME)
